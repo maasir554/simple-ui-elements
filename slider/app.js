@@ -1,0 +1,107 @@
+sliderOne = document.getElementById("slider-1")
+add_slider_logics = (slider) => {
+    let line = slider.children[1]
+    
+    let dragger = slider.children[1].children[1]
+    
+    let fill = slider.children[1].children[0];
+    
+    let lineWidth = parseInt(window.getComputedStyle(line).getPropertyValue('width').slice(0,-2))
+    
+    let valueBox = slider.children[2]
+    
+    let returnValue;
+
+    // the following is an important function:
+    const mousemover = (event2)=>{
+        let reqPosn =  (event2.clientX - line.offsetLeft)
+          
+        if (reqPosn >=0 && reqPosn <= lineWidth){
+            fill.style.width = reqPosn + 'px'
+
+            dragger.style.left = reqPosn +'px'
+            
+            returnValue = Math.round( reqPosn / lineWidth * 100)
+            
+        } 
+        
+        // To solve the issue wen user moves cursor too fast:
+        else if (reqPosn >= lineWidth){
+            fill.style.width = lineWidth + 'px'
+            
+            dragger.style.left = lineWidth + 'px'
+            
+            returnValue = 100;
+        }
+        // sames reason as the last one.
+        else{
+            fill.style.width = '0px'
+            
+            dragger.style.left = '0px'
+            
+            returnValue = 0
+        }
+        // as returnValue changes, we need to update some parts.
+        valueBox.innerText = returnValue + '%';
+        
+        updateTBsize(returnValue);
+        
+    }
+    
+    // we need to add the event to the document object
+    const rapid_mouse_reporter = () => {
+        // the following is a new thing i learnt.
+        // it updates the value continuously as we move mouse.
+        document.addEventListener('mousemove',mousemover)
+    }
+    
+    // adding functionality to the dragger
+    dragger.addEventListener('mousedown',rapid_mouse_reporter)
+    
+    // when mouse is up, we need to remove the event listener.: 
+    document.addEventListener('mouseup',()=>{
+        document.removeEventListener('mousemove',mousemover)
+    })
+
+    // if we click directly on some point on the gray liner, it should also
+    // work similarly.
+    line.addEventListener('mousedown', (event)=>{
+        
+        // the below two lines are just for adding focus to the dragger(circle)
+        event.preventDefault() // default behaviour of browser doesnot allow us to set focus on mouse down
+        
+        dragger.focus()
+        
+        document.addEventListener('mousemove',mousemover)
+        
+        // the following is repeated, but it is required for mouse down
+        let reqPosn =  (event.clientX - line.offsetLeft )
+        
+        if (reqPosn >=0 && reqPosn <= lineWidth){
+            fill.style.width = reqPosn + 'px'
+            
+            dragger.style.left = reqPosn +'px'
+            
+            returnValue = Math.round( reqPosn / lineWidth * 100)
+            
+            valueBox.innerText = returnValue + '%'
+            
+            updateTBsize(returnValue);
+        }
+    })
+
+}
+
+// finally, adding the logics to the slider:
+add_slider_logics(sliderOne)
+
+// additional showcase:
+updateTBsize = (size) => {
+    let TB = document.getElementById('showcaseTB')
+    
+    TB.style.fontSize = size + 'px';
+}
+
+
+// Mohammad Maasir | 11 sep 2023 - 12 sep 2023| completed 00:45
+// SPDX Identifier: MIT License 
