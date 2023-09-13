@@ -77,7 +77,7 @@ add_slider_logics = (slider) => {
     // if we click directly on some point on the gray liner, it should also
     // work similarly.
     let lineDraggerIntegration = (event)=>{
-        
+
         // the below two lines are just for adding focus to the dragger(circle)
         // event.preventDefault() // default behaviour of browser doesnot allow us to set focus on mouse down
         
@@ -111,6 +111,8 @@ add_slider_logics = (slider) => {
     document.addEventListener('touchend',()=>{document.removeEventListener('touchmove',mousemover)})
 
     dragger.addEventListener('touchstart',e=>{dragger.focus()})
+    line.addEventListener('touchend',()=>{dragger.focus()})
+    line.addEventListener('mousedown',(e)=>{e.preventDefault();dragger.focus()})
 
 }
 

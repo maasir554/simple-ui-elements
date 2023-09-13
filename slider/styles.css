@@ -101,8 +101,7 @@ body, html {
     background-color: rgb(66, 142, 230);
     border:none;
     outline: none;
-    width: 17.5px;
-    height: 17.5px;
+    transition: background-color 0.1s ease;
 }
 
 .slider-fill{
