@@ -66,10 +66,12 @@ add_slider_logics = (slider) => {
     
     document.addEventListener('mouseup',()=>{
         document.removeEventListener('mousemove',mousemover);
+        document.removeEventListener("touchmove", mousemover)
     })
 
     document.addEventListener('touchend', () => {
         document.removeEventListener("touchmove", mousemover)
+        document.removeEventListener('mousemove',mousemover);
     })
 
     // if we click directly on some point on the gray liner, it should also
@@ -105,8 +107,8 @@ add_slider_logics = (slider) => {
     line.addEventListener('mousedown',lineDraggerIntegration )
     line.addEventListener('touchstart',lineDraggerIntegration)
 
-    document.addEventListener('mouseup',()=>{line.removeEventListener('mousemove',mousemover)})
-    document.addEventListener('touchend',()=>{line.removeEventListener('touchmove',mousemover)})
+    document.addEventListener('mouseup',()=>{document.removeEventListener('mousemove',mousemover)})
+    document.addEventListener('touchend',()=>{document.removeEventListener('touchmove',mousemover)})
 
     dragger.addEventListener('touchstart',e=>{dragger.focus()})
 
