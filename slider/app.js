@@ -14,8 +14,7 @@ add_slider_logics = (slider) => {
 
     // the following is an important function:
     const mousemover = (event2)=>{
-        let reqPosn =  (event2.clientX - line.offsetLeft)
-          
+        let reqPosn = (event2.clientX) ? (event2.clientX - line.offsetLeft) : (event2.touches[0].clientX - line.offsetLeft)
         if (reqPosn >=0 && reqPosn <= lineWidth){
             fill.style.width = reqPosn + 'px'
 
@@ -53,29 +52,41 @@ add_slider_logics = (slider) => {
         // the following is a new thing i learnt.
         // it updates the value continuously as we move mouse.
         document.addEventListener('mousemove',mousemover)
+
+        document.addEventListener('touchmove',mousemover)
+
     }
     
     // adding functionality to the dragger
     dragger.addEventListener('mousedown',rapid_mouse_reporter)
     
+    dragger.addEventListener('touchstart',rapid_mouse_reporter);
+    
     // when mouse is up, we need to remove the event listener.: 
+    
     document.addEventListener('mouseup',()=>{
-        document.removeEventListener('mousemove',mousemover)
+        document.removeEventListener('mousemove',mousemover);
+    })
+
+    document.addEventListener('touchend', () => {
+        document.removeEventListener("touchmove", mousemover)
     })
 
     // if we click directly on some point on the gray liner, it should also
     // work similarly.
-    line.addEventListener('mousedown', (event)=>{
+    let lineDraggerIntegration = (event)=>{
         
         // the below two lines are just for adding focus to the dragger(circle)
-        event.preventDefault() // default behaviour of browser doesnot allow us to set focus on mouse down
+        // event.preventDefault() // default behaviour of browser doesnot allow us to set focus on mouse down
         
         dragger.focus()
         
         document.addEventListener('mousemove',mousemover)
+
+        document.addEventListener('touchmove',mousemover)
         
         // the following is repeated, but it is required for mouse down
-        let reqPosn =  (event.clientX - line.offsetLeft )
+        let reqPosn =  (event.clientX) ? (event.clientX - line.offsetLeft ) : (event.touches[0] - line.offsetLeft);
         
         if (reqPosn >=0 && reqPosn <= lineWidth){
             fill.style.width = reqPosn + 'px'
@@ -88,7 +99,16 @@ add_slider_logics = (slider) => {
             
             updateTBsize(returnValue);
         }
-    })
+    }
+
+    
+    line.addEventListener('mousedown',lineDraggerIntegration )
+    line.addEventListener('touchstart',lineDraggerIntegration)
+
+    document.addEventListener('mouseup',()=>{line.removeEventListener('mousemove',mousemover)})
+    document.addEventListener('touchend',()=>{line.removeEventListener('touchmove',mousemover)})
+
+    dragger.addEventListener('touchstart',e=>{dragger.focus()})
 
 }
 
