@@ -23,7 +23,6 @@ add_slider_logics = (slider) => {
             returnValue = Math.round( reqPosn / lineWidth * 100)
             
         } 
-        
         // To solve the issue wen user moves cursor too fast:
         else if (reqPosn >= lineWidth){
             fill.style.width = lineWidth + 'px'
@@ -113,6 +112,80 @@ add_slider_logics = (slider) => {
     dragger.addEventListener('touchstart',e=>{dragger.focus()})
     line.addEventListener('touchend',()=>{dragger.focus()})
     line.addEventListener('mousedown',(e)=>{e.preventDefault();dragger.focus()})
+
+    // Keyboard logics: 
+    const keyboardLogic = (event) => {
+        let INITIALreqPosn = parseFloat(fill.style.width.slice(0,-2));
+        let reqPosn;
+        switch( event.keyCode){
+            case 39 : case 38 :
+                reqPosn = INITIALreqPosn + parseFloat(lineWidth/100)
+                if (reqPosn >=0 && reqPosn <= lineWidth){
+                    fill.style.width = reqPosn + 'px'
+        
+                    dragger.style.left = reqPosn +'px'
+                    
+                    returnValue = Math.round( reqPosn / lineWidth * 100)
+                    
+                } 
+                // To solve the issue wen user moves cursor too fast:
+                else if (reqPosn >= lineWidth){
+                    fill.style.width = lineWidth + 'px'
+                    
+                    dragger.style.left = lineWidth + 'px'
+                    
+                    returnValue = 100;
+                }
+                // sames reason as the last one.
+                else{
+                    fill.style.width = '0px'
+                    
+                    dragger.style.left = '0px'
+                    
+                    returnValue = 0
+                }
+                // as returnValue changes, we need to update some parts.
+                valueBox.innerText = returnValue + '%';
+                
+                updateTBsize(returnValue);
+
+                break;
+            
+            case 37: case 40:     
+            reqPosn = INITIALreqPosn - parseFloat(lineWidth/100);
+                if (reqPosn >=0 && reqPosn <= lineWidth){
+                    fill.style.width = reqPosn + 'px'
+    
+                    dragger.style.left = reqPosn +'px'
+
+                    returnValue = Math.round( reqPosn / lineWidth * 100)
+
+                } 
+                // To solve the issue wen user moves cursor too fast:
+                else if (reqPosn >= lineWidth){
+                    fill.style.width = lineWidth + 'px'
+
+                    dragger.style.left = lineWidth + 'px'
+
+                    returnValue = 100;
+                }
+                // sames reason as the last one.
+                else{
+                    fill.style.width = '0px'
+
+                    dragger.style.left = '0px'
+
+                    returnValue = 0
+                }
+                // as returnValue changes, we need to update some parts.
+                valueBox.innerText = returnValue + '%';
+
+                updateTBsize(returnValue);
+                break;
+            }
+    }
+    
+    slider.addEventListener('keydown',keyboardLogic)
 
 }
 
